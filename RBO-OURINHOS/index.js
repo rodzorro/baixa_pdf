@@ -1,8 +1,6 @@
 const fs      = require('fs');
-const https   = require('https');
 const pdf     = require('pdf-parse');
 const cheerio = require('cheerio');
-const path    = require('path');
 const axios   = require('axios');
 
 const url = 'https://www.concursosrbo.com.br/Projetos/projeto-detalhes.aspx?id=05nbegfo2nI=';
