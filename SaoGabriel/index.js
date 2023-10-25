@@ -4,29 +4,43 @@ const cheerio = require('cheerio');
 const axios   = require('axios');
 
 const url = 'https://www.fundacaofafipa.org.br/informacoes/3893/';
-
+          
 async function main() {
 
-  const resp = await axios.get(url);  
+  let resp = await axios.get(url);  
   
-  const $ = cheerio.load(resp.data);            
- // const div_links =  $('#blocoPublicacoes > div > ul > li:nth-child(3)');   
-  const div_links =  $('[class="dados total2"] > ul > li:nth-child(3)');  
+  const $ = cheerio.load(resp.data);  
 
-  console.log(div_links.text());
-/*  
-  for (let i=0;i<links.length;i++){
-    const nome = links[i];
+  const div_links  =  $('[class="dados total2"] > ul >  li > a'); 
+  const data_links = $('[class="dados total2"] > ul >  li > a > span'); 
+  
+  let num_edital = 0;
+  let num_anexo = 0;  
+
+  for (let i=0;i<div_links.length;i++){
+    let nome = div_links[i];
+    let data = data_links[i];
+    const pdf = $(nome).attr('href');
         
-    console.log($(nome).text())
-    //console.log('https://www.concursosrbo.com.br' + $(nome).attr('href'));   
+    let edital = nome_edicao($(nome).text());
+    console.log($(data).text());
 
-    await baixa_pdf('https://www.concursosrbo.com.br'+ $(nome).attr('href'),i+1);
-
-    await procura_pdf(i+1);
-    
+    if (edital === 'Edital') {
+      ++num_edital;
+      edital = edital + ' - ' + num_edital
+      await baixa_pdf(pdf,edital);
+      await procura_pdf(edital);
+    }  
+    else {
+      ++num_anexo;
+      edital = edital + ' - ' +  num_anexo
+      await baixa_pdf(pdf,edital);
+      await procura_pdf(edital);
+    }
+   
+    console.log('*************************************************');
+            
   }  
-  */
 }
 
 main();
@@ -69,4 +83,24 @@ async function procura_pdf(edicao){
           console.log('SEU NOME ESTA NESTE EDITAL');
       }
 
+}
+
+function retira_espaço(nome){
+  let novo_nome = '';
+
+  for (let i =0;i < nome.length;i++){
+   if (nome[i].trim() !== '' )    {
+      novo_nome = novo_nome + nome[i];
+    }  
+  }  
+  
+  return novo_nome
+}
+
+function nome_edicao(nome){
+  
+  let novo_nome = nome.trim();
+  novo_nome = novo_nome.split(' ');    
+
+  return novo_nome[0];
 }
