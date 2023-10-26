@@ -11,9 +11,9 @@ async function main() {
   
   const $ = cheerio.load(resp.data);  
 
-  const div_links  =  $('[class="dados total2"] > ul >  li > a'); 
+  const div_links  = $('[class="dados total2"] > ul >  li > a'); 
   const data_links = $('[class="dados total2"] > ul >  li > a > span'); 
-  
+
   let num_edital = 0;
   let num_anexo = 0;  
 

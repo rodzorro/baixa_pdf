@@ -22,7 +22,7 @@ async function main() {
     await baixa_pdf('https://www.concursosrbo.com.br'+ $(nome).attr('href'),i+1);
 
     await procura_pdf(i+1);
-    
+    console.log('*************************************************************')    
   }  
 }
 
