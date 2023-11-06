@@ -31,7 +31,8 @@ main();
 async function baixa_pdf(url_pdf,edicao){
       
   if (verifica_existe_edicao(edicao) === 0){    
-    console.log('PDF já foi baixado!');
+    //console.log('PDF já foi baixado!');
+    fs.unlinkSync(edicao+'.pdf');
     return;
   }else {
     const resp = await axios.get(url_pdf,{responseType:'stream'});
@@ -59,6 +60,7 @@ async function procura_pdf(edicao){
   
       const dataBuffer = fs.readFileSync(edicao +'.pdf');
       console.log(edicao+'.pdf');        
+      
       const data = await pdf(dataBuffer);        
                       
       if (data.text.toUpperCase().includes('RODRIGO AQUINO')) {
