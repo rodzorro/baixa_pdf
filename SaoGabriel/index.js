@@ -48,20 +48,19 @@ main();
 async function baixa_pdf(url_pdf,edicao){
       
   if (verifica_existe_edicao(edicao) === 0){    
-    console.log('PDF já foi baixado!');
-    return;
-  }else {
-    const resp = await axios.get(url_pdf,{responseType:'stream'});
-    const stream = resp.data.pipe(fs.createWriteStream(edicao +'.pdf'));
+    fs.unlinkSync(edicao+'.pdf');    
+  }
 
-    return new Promise((resolve, reject) => {
-        stream.on('finish', () => {
-          console.log('PDF baixado com sucesso!');
-          resolve();          
-        });        
-      });      
-    }
-    
+  const resp = await axios.get(url_pdf,{responseType:'stream'});
+  const stream = resp.data.pipe(fs.createWriteStream(edicao +'.pdf'));
+
+  return new Promise((resolve, reject) => {
+      stream.on('finish', () => {
+        console.log('PDF baixado com sucesso!');
+        resolve();          
+      });        
+    });      
+       
 }
 
 function verifica_existe_edicao(edicao){
